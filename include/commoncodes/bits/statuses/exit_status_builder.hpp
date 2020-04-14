@@ -58,6 +58,16 @@ namespace commoncodes {
 			inline operator exit_status() const {
 				return build();
 			}
+
+		protected:
+			static __cc_str_op_mod void add_prefix(std::string& msg,
+			                                       const std::string& pfx) {
+				if(!pfx.empty()) msg = pfx + ": " + msg;
+			}
+			static __cc_str_op_mod void add_suffix(std::string& msg,
+			                                       const std::string& sfx) {
+				if(!sfx.empty()) msg += ": " + sfx;
+			}
 	};
 }
 
