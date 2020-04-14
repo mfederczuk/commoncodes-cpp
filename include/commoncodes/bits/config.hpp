@@ -35,4 +35,10 @@
 	#define __cc_vec_op_mod inline
 #endif
 
+#if __cplusplus > 201703L && __cpp_lib_constexpr_string >= 201907 && __cpp_lib_constexpr_vector >= 201907
+	#define __cc_str_vec_op_mod constexpr
+#else
+	#define __cc_str_vec_op_mod inline
+#endif
+
 #endif /* _COMMONCODES_BITS_CONFIG_HPP */
