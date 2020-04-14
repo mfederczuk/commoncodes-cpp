@@ -20,4 +20,12 @@
 #ifndef _COMMONCODES_BITS_CONFIG_HPP
 #define _COMMONCODES_BITS_CONFIG_HPP
 
+#include <string>
+
+#if __cplusplus > 201703L && __cpp_lib_constexpr_string >= 201907
+	#define __cc_str_op_mod constexpr
+#else
+	#define __cc_str_op_mod inline
+#endif
+
 #endif /* _COMMONCODES_BITS_CONFIG_HPP */
