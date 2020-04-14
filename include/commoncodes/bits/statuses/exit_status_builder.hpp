@@ -25,6 +25,12 @@
 #include <iostream>
 #include <string>
 
+#define __cc_exsb_prop(cls, type, name) \
+	inline cls& name(const type& name) { \
+		this->_ ## name = name; \
+		return *this; \
+	}
+
 namespace commoncodes {
 	struct exit_status_builder {
 		private:
