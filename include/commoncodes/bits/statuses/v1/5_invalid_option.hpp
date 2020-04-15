@@ -22,7 +22,6 @@
 
 #include <commoncodes/bits/config.hpp>
 #include <commoncodes/bits/statuses/exit_status_builder.hpp>
-#include <cstdint>
 #include <string>
 
 namespace commoncodes::v1 {
