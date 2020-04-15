@@ -41,7 +41,7 @@ namespace commoncodes::v1 {
 			__cc_exsb_prop(invalid_argument, std::string, argument);
 			__cc_exsb_prop(invalid_argument, std::string, info);
 
-			std::string msg() const noexcept override;
+			std::string msg() const override;
 	};
 }
 

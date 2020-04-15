@@ -24,7 +24,7 @@ using cc::v1::unexpected_option;
 using std::logic_error;
 using std::string;
 
-string unexpected_option::msg() const noexcept {
+string unexpected_option::msg() const {
 	if(_option.empty()) {
 		throw logic_error("commoncodes::v1::unexpected_option::msg(): no option specified");
 	}

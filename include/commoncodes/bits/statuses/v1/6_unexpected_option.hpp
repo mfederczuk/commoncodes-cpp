@@ -37,7 +37,7 @@ namespace commoncodes::v1 {
 			__cc_exsb_prop(unexpected_option, std::string, origin);
 			__cc_exsb_prop(unexpected_option, std::string, option);
 
-			std::string msg() const noexcept override;
+			std::string msg() const override;
 	};
 }
 

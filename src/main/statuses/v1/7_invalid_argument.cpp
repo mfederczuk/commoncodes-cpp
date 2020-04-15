@@ -24,7 +24,7 @@ using cc::v1::invalid_argument;
 using std::logic_error;
 using std::string;
 
-string invalid_argument::msg() const noexcept {
+string invalid_argument::msg() const {
 	if(_argument.empty()) {
 		throw logic_error("commoncodes::v1::invalid_argument::msg(): no argument specified");
 	}

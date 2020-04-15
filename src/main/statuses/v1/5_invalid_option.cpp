@@ -24,7 +24,7 @@ using cc::v1::invalid_option;
 using std::logic_error;
 using std::string;
 
-string invalid_option::msg() const noexcept {
+string invalid_option::msg() const {
 	if(_option.empty()) {
 		throw logic_error("commoncodes::v1::invalid_option::msg(): no option specified");
 	}
