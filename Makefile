@@ -25,7 +25,7 @@ SRC_TEST = src/test
 BIN = bin
 INC = include/$(TARGET)
 
-TEST = ./test
+TEST = ./test --valgrind
 
 CCFLAGS  = -Iinclude -std=c17   -Wall -Wextra
 CXXFLAGS = -Iinclude -std=c++17 -Wall -Wextra

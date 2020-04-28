@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bash script for unit testing.
-# Copyright (C) 2019 Michael Federczuk
+# Copyright (C) 2020 Michael Federczuk
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,17 +21,16 @@ if [[ "$-" == *i* ]]; then
 fi
 
 readonly PROGRAM="utest-script"
-readonly VERSION_MAJOR=$((1)) VERSION_MINOR=$((0)) VERSION_PATCH=$((2))
-readonly COPYRIGHT_YEARS=('2019') COPYRIGHT_HOLDER='Michael Federczuk'
+readonly VERSION_MAJOR=$((1)) VERSION_MINOR=$((1)) VERSION_PATCH=$((0))
+readonly COPYRIGHT_YEARS=('2019' '2020') COPYRIGHT_HOLDER='Michael Federczuk'
 readonly LICENSE='GPLv3+' LICENSE_DESC='GNU GPL version 3 or later' \
          LICENSE_URL='https://gnu.org/licenses/gpl.html'
 readonly AUTHORS=('Michael Federczuk')
-readonly MAILING_ADDRESS='federczuk.michael@hotmail.com'
 readonly REPO_URL='https://github.com/mfederczuk/utest-script'
 
 readonly VERSION="$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
 readonly COPYRIGHT_YEAR_LATEST="${COPYRIGHT_YEARS[${#COPYRIGHT_YEARS[@]} - 1]}"
-AUTHORS_LIST="${AUTHORS[0]}"
+declare AUTHORS_LIST="${AUTHORS[0]}"
 for (( i = 1, s = ${#AUTHORS[@]} - 1; i < s; ++i )); do
 	AUTHORS_LIST+=", ${AUTHORS[i]}"
 done
@@ -42,8 +41,8 @@ fi
 readonly AUTHORS_LIST
 
 readonly USAGE="\
-usage: $0 ([-s] <file>)...
-   or: $0 --silent-all <file>..."
+usage: $0 [-m<cmd> [-A<arg>...]] ([-s] <file>)...
+   or: $0 [-m<cmd> [-A<arg>...]] --silent-all <file>..."
 
 readonly HELP="\
 $USAGE
@@ -53,16 +52,20 @@ $USAGE
     displayed in a listed format.
 
     Options:
-      -s, --silent=<file>  add FILE as test but don't save the output of it
-          --silent-all     don't save the output of any test
-      -c, --color=<when>   when to color the output (default: auto).
-                            WHEN may be: 'always', 'auto', or 'never'
-      -h, --help           show this summary and exit
-      -v, --version        show version and legal information and exit
+      -s, --silent=<file>      add FILE as test but don't save the output of it
+          --silent-all         don't save the output of any test
+      -m, --command=<cmd>      pass files separately to CMD instead of executing
+                                them
+      -A, --command-arg=<arg>  pass ARG to CMD before the file.
+                                this option can be used multiple times
+          --valgrind           use 'valgrind' as CMD
+      -c, --color=<when>       when to color the output (default: auto).
+                                WHEN must be: 'always', 'auto', or 'never'
+      -h, --help               show this summary and exit
+      -V, --version            show version and legal information and exit
 
     Exit Status:
-      (using CommonCodes v1.0.0
-       <https://mfederczuk.github.io/commoncodes/v/1.0.0.html>)
+      (using CommonCodes v2 <https://mfederczuk.github.io/commoncodes/v2.html>)
       0   all tests passed
       32  some tests failed
       33  all tests failed
@@ -79,10 +82,118 @@ There is NO WARRANTY, to the extent permitted by law.
 Written by $AUTHORS_LIST."
 
 
+check_color_support() {
+	case "$TERM" in
+		xterm-color|*-256color) echo true ;;
+		*) echo false ;;
+	esac
+}
+
 # shellcheck disable=2155
-declare tests=() color=$([[ "$TERM" =~ (^xterm-color$)|(-256color$) ]] &&
-                         echo true || echo false) \
-        silent_all=false
+declare tests=() \
+        color=$(check_color_support) \
+        silent_all=false \
+        command='' \
+        command_args=()
+
+option_silent() {
+	if (($# < 2)); then
+		echo "$0: $1: missing argument: <file>" >&2
+		echo "$USAGE"
+		exit 3
+	fi
+
+	tests+=("s$2")
+}
+
+option_silent_all() {
+	if (($# > 1)); then
+		echo "$0: $1: too many arguments: 1" >&2
+		echo "$USAGE"
+		exit 4
+	fi
+
+	silent_all=true
+}
+
+option_command() {
+	if (($# < 2)); then
+		echo "$0: $1: missing argument: <cmd>" >&2
+		echo "$USAGE"
+		exit 3
+	fi
+
+	command="$2"
+}
+
+option_command_arg() {
+	if (($# < 2)); then
+		echo "$0: $1: missing argument: <arg>" >&2
+		echo "$USAGE"
+		exit 3
+	fi
+
+	command_args+=("$2")
+}
+
+option_valgrind() {
+	if (($# > 1)); then
+		echo "$0: $1: too many arguments: 1" >&2
+		exit 4
+	fi
+
+	command='valgrind'
+	command_args=(
+		'--leak-check=full'
+		'--show-leak-kinds=all'
+		'--track-origins=yes'
+		'--error-exitcode=47'
+	)
+}
+
+option_color() {
+	if (($# < 2)); then
+		echo "$0: $1: missing argument: <when>" >&2
+		exit 3
+	fi
+
+	case "$opt_arg" in
+		'always')
+			color=true
+			;;
+		'auto')
+			# checking if the terminal supports color
+			color=$(check_color_support)
+			;;
+		'never')
+			color=false
+			;;
+		*)
+			echo "$0: $1: $opt_arg: invalid argument: WHEN must be: 'always', 'auto' or 'never'" >&2
+			exit 7
+			;;
+	esac
+}
+
+option_help() {
+	if (($# > 1)); then
+		echo "$0: $1: too many arguments: 1" >&2
+		exit 4
+	fi
+
+	echo "$HELP"
+	exit 0
+}
+
+option_version_info() {
+	if (($# > 1)); then
+		echo "$0: $1: too many arguments: 1" >&2
+		exit 4
+	fi
+
+	echo "$VERSION_INFO"
+	exit 0
+}
 
 declare ignore_opts=false argv=("$@")
 for ((i = 0, s = $#; i < s; ++i)); do
@@ -93,84 +204,94 @@ for ((i = 0, s = $#; i < s; ++i)); do
 	elif ! $ignore_opts && [[ "$arg" =~ ^--([^=]+)(=.*)?$ ]]; then
 		declare opt="${BASH_REMATCH[1]}"
 
+		declare has_arg=false
+		declare opt_arg
 		if [[ "${BASH_REMATCH[2]}" =~ ^=(.*)$ ]]; then
-			declare opt_arg="${BASH_REMATCH[1]}"
+			has_arg=true
+			opt_arg="${BASH_REMATCH[1]}"
 		fi
 
 		case "$opt" in
-		silent)
-			if ! [ ${opt_arg+x} ]; then
-				if ((i + 1 < s)); then
+			'silent')
+				if $has_arg; then
+					option_silent "--$opt" "$opt_arg"
+				elif ((i + 1 < s)); then
 					((++i))
 					opt_arg="${argv[i]}"
+					option_silent "--$opt" "$opt_arg"
 				else
-					echo "$0: --silent: missing argument: <file>"
-					echo "$USAGE"
-					exit 3
+					option_silent "--$opt"
 				fi
-			fi
-
-			tests+=("s$opt_arg")
-			;;
-		silent-all)
-			if [ ${opt_arg+x} ]; then
-				echo "$0: --help: too many arguments: 1" >&2
-				echo "$USAGE"
-				exit 4
-			fi
-			silent_all=true
-			;;
-		color)
-			if ! [ ${opt_arg+x} ]; then
-				if ((i + 1 < s)); then
-					((++i))
-					opt_arg="${argv[i]}"
-				else
-					echo "$0: --color: missing argument: <when>"
-					exit 3
-				fi
-			fi
-
-			case "$opt_arg" in
-			'always') color=true ;;
-			'auto')
-				# checking if the terminal supports color
-				case "$TERM" in
-				xterm-color|*-256color) color=true ;;
-				*) color=false ;;
-				esac
 				;;
-			'never') color=false ;;
+			'silent-all')
+				if $has_arg; then
+					option_silent_all "--$opt" "$opt_arg"
+				else
+					option_silent_all "--$opt"
+				fi
+				;;
+			'color')
+				if $has_arg; then
+					option_color "--$opt" "$opt_arg"
+				elif ((i + 1 < s)); then
+					((++i))
+					opt_arg="${argv[i]}"
+					option_color "--$opt" "$opt_arg"
+				else
+					option_color "--$opt"
+				fi
+				;;
+			'command')
+				if $has_arg; then
+					option_command "--$opt" "$opt_arg"
+				elif ((i + 1 < s)); then
+					((++i))
+					opt_arg="${argv[i]}"
+					option_command "--$opt" "$opt_arg"
+				else
+					option_command "--$opt"
+				fi
+				;;
+			'command-arg')
+				if $has_arg; then
+					option_command_arg "--$opt" "$opt_arg"
+				elif ((i + 1 < s)); then
+					((++i))
+					opt_arg="${argv[i]}"
+					option_command_arg "--$opt" "$opt_arg"
+				else
+					option_command_arg "--$opt"
+				fi
+				;;
+			'valgrind')
+				if $has_arg; then
+					option_valgrind "--$opt" "$opt_arg"
+				else
+					option_valgrind "--$opt"
+				fi
+				;;
+			'help')
+				if $has_arg; then
+					option_help "--$opt" "$opt_arg"
+				else
+					option_help "--$opt"
+				fi
+				;;
+			'version')
+				if $has_arg; then
+					option_version_info "--$opt" "$opt_arg"
+				else
+					option_version_info "--$opt"
+				fi
+				;;
 			*)
-				echo "$0: --color: $opt_arg: invalid argument: WHEN may only be: 'always', 'auto' or 'never'" >&2
-				exit 7
+				echo "$0: --$opt: invalid option" >&2
+				echo "$USAGE"
+				exit 5
 				;;
-			esac
-			;;
-		help)
-			if [ ${opt_arg+x} ]; then
-				echo "$0: --help: too many arguments: 1" >&2
-				exit 4
-			fi
-			echo "$HELP"
-			exit 0
-			;;
-		version)
-			if [ ${opt_arg+x} ]; then
-				echo "$0: --version: too many arguments: 1" >&2
-				exit 4
-			fi
-			echo "$VERSION_INFO"
-			exit 0
-			;;
-		*)
-			echo "$0: --$opt: invalid option" >&2
-			echo "$USAGE"
-			exit 5
-			;;
 		esac
 
-		unset -v opt_arg
+		unset -v opt_arg has_arg opt
 	elif ! $ignore_opts && [[ "$arg" =~ ^-([^-].*)$ ]]; then
 		declare optstr="${BASH_REMATCH[1]}"
 
@@ -178,90 +299,87 @@ for ((i = 0, s = $#; i < s; ++i)); do
 			declare opt="${optstr:0:1}"
 			optstr="${optstr:1}"
 
-			if [[ "${optstr:0:1}" == '-' ]]; then
-				declare opt_arg="${optstr}"
-			fi
+			declare opt_arg
 
 			case "$opt" in
-			s)
-				if ! [ ${opt_arg+x} ]; then
-					if [ "$optstr" ]; then
-						opt_arg="$optstr"
+				's')
+					if [ -n "$optstr" ]; then
 						j=l
+						opt_arg="$optstr"
+						option_silent "-$opt" "$opt_arg"
 					elif ((i + 1 < s)); then
 						((++i))
 						opt_arg="${argv[i]}"
+						option_silent "-$opt" "$opt_arg"
 					else
-						echo "$0: -s: missing argument: <file>"
-						echo "$USAGE"
-						exit 3
+						option_silent "-$opt"
 					fi
-				fi
-
-				tests+=("s$opt_arg")
-				;;
-			c)
-				if ! [ ${opt_arg+x} ]; then
-					if [ "$optstr" ]; then
-						opt_arg="$optstr"
-						j=l
-					elif ((i + 1 < s)); then
-						((++i))
-						opt_arg="${argv[i]}"
-					else
-						echo "$0: -c: missing argument: <when>"
-						exit 3
-					fi
-				fi
-
-				case "$opt_arg" in
-				'always') color=true ;;
-				'auto')
-					# checking if the terminal supports color
-					case "$TERM" in
-					xterm-color|*-256color) color=true ;;
-					*) color=false ;;
-					esac
 					;;
-				'never') color=false ;;
+				'c')
+					if [ -n "$optstr" ]; then
+						j=l
+						opt_arg="$optstr"
+						option_color "-$opt" "$opt_arg"
+					elif ((i + 1 < s)); then
+						((++i))
+						opt_arg="${argv[i]}"
+						option_color "-$opt" "$opt_arg"
+					else
+						option_color "-$opt"
+					fi
+					;;
+				'm')
+					if [ -n "$optstr" ]; then
+						j=l
+						opt_arg="$optstr"
+						option_command "-$opt" "$opt_arg"
+					elif ((i + 1 < s)); then
+						((++i))
+						opt_arg="${argv[i]}"
+						option_command "-$opt" "$opt_arg"
+					else
+						option_command "-$opt"
+					fi
+					;;
+				'A')
+					if [ -n "$optstr" ]; then
+						j=l
+						opt_arg="$optstr"
+						option_command_arg "-$opt" "$opt_arg"
+					elif ((i + 1 < s)); then
+						((++i))
+						opt_arg="${argv[i]}"
+						option_command_arg "-$opt" "$opt_arg"
+					else
+						option_command_arg "-$opt"
+					fi
+					;;
+				'h'|'?')
+					option_help "-$opt"
+					;;
+				'V'|'v')
+					option_version_info "-$opt"
+					;;
 				*)
-					echo "$0: --color: $opt_arg: invalid argument: WHEN may only be: 'always', 'auto' or 'never'" >&2
-					exit 7
+					echo "$0: -$opt: invalid option" >&2
+					echo "$USAGE"
+					exit 5
 					;;
-				esac
-				;;
-			h|\?)
-				if [ ${opt_arg+x} ]; then
-					echo "$0: -h: too many arguments: 1" >&2
-					exit 4
-				fi
-				echo "$HELP"
-				exit 0
-				;;
-			v)
-				if [ ${opt_arg+x} ]; then
-					echo "$0: -v: too many arguments: 1" >&2
-					exit 4
-				fi
-				echo "$VERSION_INFO"
-				exit 0
-				;;
-			*)
-				echo "$0: -$opt: invalid option" >&2
-				echo "$USAGE"
-				exit 5
-				;;
 			esac
 
-			unset -v opt_arg
+			unset -v opt_arg opt
 		done
+
+		unset -v optstr
 	else
 		tests+=("-$arg")
 	fi
-done
-unset -v ignore_opts argv i s arg opt testc optstr j l
 
-readonly tests color silent_all
+	unset -v arg
+done; unset -v i s
+unset -v argv ignore_opts
+
+readonly tests color silent_all command command_args
 
 
 readonly testc=$((${#tests[@]}))
@@ -317,6 +435,16 @@ _abs() {
 	fi
 }
 
+_exec_test() {
+	local test="$1"
+
+	if [ -n "$command" ]; then
+		"$command" "${command_args[@]}" "$test"
+	else
+		./"$test"
+	fi
+}
+
 # shellcheck disable=2155
 declare output="Running ${strong_clr}${testc}${reset_clr} Test$( ((testc > 1)) && printf s)..."$'\n' \
         passedc=0 failedc=0 dur=0
@@ -343,7 +471,7 @@ for ((i = 0; i < testc; ++i)); do
 	# saving test output and adding exit status
 	# shellcheck disable=2155
 	declare test_output='' test_start_time=$(date +%s%N)
-	test_output+=$(valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=102 "./$test" \
+	test_output+=$(_exec_test "./$test" \
 	               2> >(sed -E s/'^'/"$(_repeat ' ' ${#testc}) ${stderr_bullet_clr}2>${reset_clr} "/g) \
 	               1> >(sed -E s/'^'/"$(_repeat ' ' ${#testc}) ${stdout_bullet_clr}1>${reset_clr} "/g))
 	# shellcheck disable=2155
