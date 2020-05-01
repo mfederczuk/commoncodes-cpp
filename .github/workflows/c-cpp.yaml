@@ -1,0 +1,29 @@
+name: C/C++
+
+on:
+  push:
+    branches: [master, develop, feature/**, change/**, hotfix/**]
+    tags: [v*]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: apt-get install clang
+        run: sudo apt-get install clang
+      - name: apt-get install valgrind
+        run: sudo apt-get install valgrind
+
+      - uses: actions/checkout@v2
+
+      - name: make (GCC)
+        run: make CC=gcc CXX=g++ all
+      - name: make clean
+        run: make clean
+      - name: make (Clang)
+        run: make CC=clang CXX=clang all
+
+      - name: make test
+        run: make test
