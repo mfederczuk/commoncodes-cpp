@@ -36,7 +36,7 @@ namespace commoncodes {
 				return hash;
 			}
 
-			const size_t _id;
+			size_t _id;
 
 		public:
 			constexpr opt_id(size_t id) noexcept : _id(id) {}
