@@ -27,6 +27,7 @@
 #include <vector>
 
 #define __cc_opt_op_mod __cc_str_vec_op_mod
+#define __cc_opt_builder_op_mod __cc_str_vec_op_mod
 
 namespace commoncodes {
 	struct opt {
@@ -102,6 +103,78 @@ namespace commoncodes {
 				       _long_aliases != rhs._long_aliases ||
 				       _arg != rhs._arg;
 			}
+
+			struct builder {
+				private:
+					opt_id _id = unknown_opt_id;
+					std::vector<char> _short_aliases = {};
+					std::vector<std::string> _long_aliases = {};
+					uint8_t _arg = _no_arg;
+
+				public:
+					__cc_str_vec_op_mod builder() {}
+
+					__cc_opt_builder_op_mod builder& id(const opt_id& id) noexcept {
+						this->_id = id;
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& id(char id) noexcept {
+						return this->id(opt_id(id));
+					}
+					__cc_opt_builder_op_mod builder& id(const std::string& id) noexcept {
+						return this->id(opt_id(id.c_str()));
+					}
+
+					__cc_opt_builder_op_mod builder& alias(char short_alias) noexcept {
+						this->_short_aliases.push_back(short_alias);
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& alias(const std::string& long_alias) noexcept {
+						this->_long_aliases.push_back(long_alias);
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& alias(char short_alias,
+					                                       const std::string& long_alias) noexcept {
+						return alias(short_alias).alias(long_alias);
+					}
+
+					__cc_opt_builder_op_mod builder& aliases(const std::vector<char>& short_aliases) noexcept {
+						this->_short_aliases.insert(this->_short_aliases.end(),
+						                            short_aliases.begin(),
+						                            short_aliases.end());
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& aliases(const std::vector<std::string>& long_aliases) noexcept {
+						this->_long_aliases.insert(this->_long_aliases.end(),
+						                           long_aliases.begin(),
+						                           long_aliases.end());
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& aliases(const std::vector<char>& short_aliases,
+					                                         const std::vector<std::string>& long_aliases) noexcept {
+						return aliases(short_aliases).aliases(long_aliases);
+					}
+
+					__cc_opt_builder_op_mod builder& no_arg() noexcept {
+						_arg = _no_arg;
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& arg_required(bool required = true) noexcept {
+						_arg = required ? _arg_required : _arg_optional;
+						return *this;
+					}
+					__cc_opt_builder_op_mod builder& arg_optional(bool optional = true) noexcept {
+						_arg = optional ? _arg_optional : _arg_required;
+						return *this;
+					}
+
+					__cc_opt_op_mod opt build() const noexcept {
+						return opt(_id, _short_aliases, _long_aliases, _arg);
+					}
+					__cc_opt_op_mod operator opt() const noexcept {
+						return build();
+					}
+			};
 	};
 }
 
