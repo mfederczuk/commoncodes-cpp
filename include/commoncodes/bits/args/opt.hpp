@@ -138,13 +138,13 @@ namespace commoncodes {
 						return alias(short_alias).alias(long_alias);
 					}
 
-					__cc_opt_builder_op_mod builder& aliases(const std::vector<char>& short_aliases) noexcept {
+					__cc_opt_builder_op_mod builder& short_aliases(const std::vector<char>& short_aliases) noexcept {
 						this->_short_aliases.insert(this->_short_aliases.end(),
 						                            short_aliases.begin(),
 						                            short_aliases.end());
 						return *this;
 					}
-					__cc_opt_builder_op_mod builder& aliases(const std::vector<std::string>& long_aliases) noexcept {
+					__cc_opt_builder_op_mod builder& long_aliases(const std::vector<std::string>& long_aliases) noexcept {
 						this->_long_aliases.insert(this->_long_aliases.end(),
 						                           long_aliases.begin(),
 						                           long_aliases.end());
@@ -152,7 +152,7 @@ namespace commoncodes {
 					}
 					__cc_opt_builder_op_mod builder& aliases(const std::vector<char>& short_aliases,
 					                                         const std::vector<std::string>& long_aliases) noexcept {
-						return aliases(short_aliases).aliases(long_aliases);
+						return this->short_aliases(short_aliases).long_aliases(long_aliases);
 					}
 
 					__cc_opt_builder_op_mod builder& no_arg() noexcept {
