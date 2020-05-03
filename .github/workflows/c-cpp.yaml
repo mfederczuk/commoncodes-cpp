@@ -23,7 +23,7 @@ jobs:
       - name: make clean
         run: make clean
       - name: make (Clang)
-        run: make CC=clang CXX=clang all
+        run: make CC=clang CXX=clang++ all
 
       - name: make test
         run: make test
