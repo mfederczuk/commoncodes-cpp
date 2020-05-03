@@ -1,0 +1,73 @@
+// <commoncodes/bits/args/opt_arg.hpp>
+/*
+ * C++ command line tool library.
+ * Copyright (C) 2020 Michael Federczuk
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#ifndef _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
+#define _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
+
+#include <commoncodes/bits/args/opt.hpp>
+#include <commoncodes/bits/config.hpp>
+#include <optional>
+#include <string>
+
+namespace commoncodes {
+	struct opt_arg {
+		private:
+			commoncodes::opt _opt;
+			std::string _opt_alias;
+			std::optional<std::string> _arg;
+
+		public:
+			__cc_str_vec_op_mod opt_arg(const opt& opt,
+			                            const std::string& opt_alias,
+			                            const std::optional<std::string>& arg) noexcept
+					: _opt(opt), _opt_alias(opt_alias), _arg(arg) {
+			}
+			__cc_str_vec_op_mod opt_arg() noexcept
+					: opt_arg(opt(), "", std::nullopt) {
+			}
+
+			__cc_opt_op_mod commoncodes::opt opt() const noexcept {
+				return _opt;
+			}
+
+			__cc_str_op_mod std::string opt_alias() const noexcept {
+				return _opt_alias;
+			}
+
+			constexpr bool has_arg() const noexcept {
+				return _arg.has_value();
+			}
+			__cc_str_op_mod std::string arg() const noexcept {
+				return _arg.value_or("");
+			}
+
+			__cc_str_vec_op_mod bool operator==(const opt_arg& rhs) const noexcept {
+				return _opt == rhs._opt &&
+				       _opt_alias == rhs._opt_alias &&
+				       _arg == rhs._arg;
+			}
+			__cc_str_vec_op_mod bool operator!=(const opt_arg& rhs) const noexcept {
+				return _opt != rhs._opt ||
+				       _opt_alias != rhs._opt_alias ||
+				       _arg != rhs._arg;
+			}
+	};
+}
+
+#endif /* _COMMONCODES_BITS_ARGS_OPT_ARG_HPP */
