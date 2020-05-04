@@ -30,13 +30,9 @@ namespace commoncodes {
 			std::variant<val_arg, opt_arg> _arg;
 
 		public:
-			__cc_str_op_mod arg(const val_arg& val_arg) noexcept
-					: _arg(val_arg) {
-			}
-			__cc_str_vec_op_mod arg(const opt_arg& opt_arg) noexcept
-					: _arg(opt_arg) {
-			}
-			__cc_str_op_mod arg() : arg(val_arg()) {}
+			inline arg(const val_arg& val_arg) noexcept : _arg(val_arg) {}
+			inline arg(const opt_arg& opt_arg) noexcept : _arg(opt_arg) {}
+			inline arg() : arg(val_arg()) {}
 
 			constexpr bool is_val() const noexcept {
 				return std::holds_alternative<val_arg>(_arg);
@@ -45,24 +41,24 @@ namespace commoncodes {
 				return std::holds_alternative<opt_arg>(_arg);
 			}
 
-			__cc_str_op_mod const val_arg& val() const {
+			inline const val_arg& val() const {
 				return std::get<val_arg>(_arg);
 			}
-			__cc_str_op_mod operator val_arg() const {
+			inline operator val_arg() const {
 				return val();
 			}
 
-			__cc_str_vec_op_mod const opt_arg& opt() const {
+			inline const opt_arg& opt() const {
 				return std::get<opt_arg>(_arg);
 			}
-			__cc_str_vec_op_mod operator opt_arg() const {
+			inline operator opt_arg() const {
 				return opt();
 			}
 
-			__cc_str_vec_op_mod bool operator==(const arg& rhs) const noexcept {
+			inline bool operator==(const arg& rhs) const noexcept {
 				return _arg == rhs._arg;
 			}
-			__cc_str_vec_op_mod bool operator!=(const arg& rhs) const noexcept {
+			inline bool operator!=(const arg& rhs) const noexcept {
 				return _arg != rhs._arg;
 			}
 	};

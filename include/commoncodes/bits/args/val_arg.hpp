@@ -20,7 +20,6 @@
 #ifndef _COMMONCODES_BITS_ARGS_VAL_ARG_HPP
 #define _COMMONCODES_BITS_ARGS_VAL_ARG_HPP
 
-#include <commoncodes/bits/config.hpp>
 #include <string>
 
 namespace commoncodes {
@@ -29,28 +28,26 @@ namespace commoncodes {
 			std::string _val;
 
 		public:
-			__cc_str_op_mod val_arg(const std::string& val = "") noexcept
-					: _val(val) {
-			}
+			inline val_arg(const std::string& val = "") noexcept : _val(val) {}
 
-			__cc_str_op_mod const std::string& val() const noexcept {
+			inline const std::string& val() const noexcept {
 				return _val;
 			}
-			__cc_str_op_mod operator std::string() const noexcept {
+			inline operator std::string() const noexcept {
 				return _val;
 			}
 
-			__cc_str_op_mod const std::string& operator*() const noexcept {
+			inline const std::string& operator*() const noexcept {
 				return val();
 			}
-			__cc_str_op_mod const std::string* operator->() const noexcept {
+			inline const std::string* operator->() const noexcept {
 				return &_val;
 			}
 
-			__cc_str_op_mod bool operator==(const val_arg& rhs) const noexcept {
+			inline bool operator==(const val_arg& rhs) const noexcept {
 				return _val == rhs._val;
 			}
-			__cc_str_op_mod bool operator!=(const val_arg& rhs) const noexcept {
+			inline bool operator!=(const val_arg& rhs) const noexcept {
 				return _val != rhs._val;
 			}
 	};

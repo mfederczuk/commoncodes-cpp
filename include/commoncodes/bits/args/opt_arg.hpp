@@ -21,7 +21,6 @@
 #define _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
 
 #include <commoncodes/bits/args/opt.hpp>
-#include <commoncodes/bits/config.hpp>
 #include <optional>
 #include <string>
 
@@ -33,36 +32,34 @@ namespace commoncodes {
 			std::optional<std::string> _arg;
 
 		public:
-			__cc_str_vec_op_mod opt_arg(const opt& opt,
-			                            const std::string& opt_alias,
-			                            const std::optional<std::string>& arg) noexcept
+			inline opt_arg(const opt& opt,
+			               const std::string& opt_alias,
+			               const std::optional<std::string>& arg) noexcept
 					: _opt(opt), _opt_alias(opt_alias), _arg(arg) {
 			}
-			__cc_str_vec_op_mod opt_arg() noexcept
-					: opt_arg(opt(), "", std::nullopt) {
-			}
+			inline opt_arg() noexcept : opt_arg(opt(), "", std::nullopt) {}
 
-			__cc_opt_op_mod const commoncodes::opt& opt() const noexcept {
+			inline const commoncodes::opt& opt() const noexcept {
 				return _opt;
 			}
 
-			__cc_str_op_mod const std::string& opt_alias() const noexcept {
+			inline const std::string& opt_alias() const noexcept {
 				return _opt_alias;
 			}
 
 			constexpr bool has_arg() const noexcept {
 				return _arg.has_value();
 			}
-			__cc_str_op_mod std::string arg() const noexcept {
+			inline std::string arg() const noexcept {
 				return _arg.value_or("");
 			}
 
-			__cc_str_vec_op_mod bool operator==(const opt_arg& rhs) const noexcept {
+			inline bool operator==(const opt_arg& rhs) const noexcept {
 				return _opt == rhs._opt &&
 				       _opt_alias == rhs._opt_alias &&
 				       _arg == rhs._arg;
 			}
-			__cc_str_vec_op_mod bool operator!=(const opt_arg& rhs) const noexcept {
+			inline bool operator!=(const opt_arg& rhs) const noexcept {
 				return _opt != rhs._opt ||
 				       _opt_alias != rhs._opt_alias ||
 				       _arg != rhs._arg;

@@ -21,10 +21,9 @@
 #define _COMMONCODES_BITS_ARGS_OPTS_HPP
 
 #include <commoncodes/bits/args/opt.hpp>
-#include <commoncodes/bits/config.hpp>
 
 #define commoncodes_opt(name, id_) \
-		__cc_str_vec_op_mod const ::commoncodes::opt name = ::commoncodes::opt::builder().id(::commoncodes::opt_id(id_))
+		inline const ::commoncodes::opt name = ::commoncodes::opt::builder().id(::commoncodes::opt_id(id_))
 
 namespace commoncodes::opts {
 	#define __cc_opt_id_base "::commoncodes::opts::"
