@@ -45,14 +45,14 @@ namespace commoncodes {
 				return std::holds_alternative<opt_arg>(_arg);
 			}
 
-			__cc_str_op_mod val_arg val() const {
+			__cc_str_op_mod const val_arg& val() const {
 				return std::get<val_arg>(_arg);
 			}
 			__cc_str_op_mod operator val_arg() const {
 				return val();
 			}
 
-			__cc_str_vec_op_mod opt_arg opt() const {
+			__cc_str_vec_op_mod const opt_arg& opt() const {
 				return std::get<opt_arg>(_arg);
 			}
 			__cc_str_vec_op_mod operator opt_arg() const {

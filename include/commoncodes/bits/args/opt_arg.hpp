@@ -42,11 +42,11 @@ namespace commoncodes {
 					: opt_arg(opt(), "", std::nullopt) {
 			}
 
-			__cc_opt_op_mod commoncodes::opt opt() const noexcept {
+			__cc_opt_op_mod const commoncodes::opt& opt() const noexcept {
 				return _opt;
 			}
 
-			__cc_str_op_mod std::string opt_alias() const noexcept {
+			__cc_str_op_mod const std::string& opt_alias() const noexcept {
 				return _opt_alias;
 			}
 

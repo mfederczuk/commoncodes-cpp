@@ -33,15 +33,15 @@ namespace commoncodes {
 					: _val(val) {
 			}
 
-			__cc_str_op_mod std::string val() const noexcept {
+			__cc_str_op_mod const std::string& val() const noexcept {
 				return _val;
 			}
 			__cc_str_op_mod operator std::string() const noexcept {
-				return val();
+				return _val;
 			}
 
 			__cc_str_op_mod const std::string& operator*() const noexcept {
-				return _val;
+				return val();
 			}
 			__cc_str_op_mod const std::string* operator->() const noexcept {
 				return &_val;

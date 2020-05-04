@@ -70,14 +70,14 @@ namespace commoncodes {
 					: opt(unknown_opt_id, {}, {}) {
 			}
 
-			constexpr opt_id id() const noexcept {
+			constexpr const opt_id& id() const noexcept {
 				return _id;
 			}
 
-			__cc_vec_op_mod std::vector<char> short_aliases() const noexcept {
+			__cc_vec_op_mod const std::vector<char>& short_aliases() const noexcept {
 				return _short_aliases;
 			}
-			__cc_str_vec_op_mod std::vector<std::string> long_aliases() const noexcept {
+			__cc_str_vec_op_mod const std::vector<std::string>& long_aliases() const noexcept {
 				return _long_aliases;
 			}
 
