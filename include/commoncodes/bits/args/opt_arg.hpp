@@ -67,4 +67,25 @@ namespace commoncodes {
 	};
 }
 
+template<typename Traits>
+inline std::basic_ostream<char, Traits>& operator<<(std::basic_ostream<char, Traits>& stream,
+                                                    const commoncodes::opt_arg& opt_arg) noexcept {
+
+	// i would put this into a .cpp file but we've got a template so this isn't
+	// possible
+
+	const std::string& alias = opt_arg.opt_alias();
+	stream << alias;
+
+	if(opt_arg.has_arg()) {
+		if(alias.length() > 2 && alias.substr(0, 2) == "--") {
+			stream << '=' << opt_arg.arg();
+		} else if(alias.length() > 1 && alias[0] == '-') {
+			stream << opt_arg.arg();
+		}
+	}
+
+	return stream;
+}
+
 #endif /* _COMMONCODES_BITS_ARGS_OPT_ARG_HPP */

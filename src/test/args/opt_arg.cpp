@@ -1,12 +1,14 @@
 #include <cassert>
 #include <commoncodes/bits/args/opt_arg.hpp>
 #include <optional>
+#include <sstream>
 
 namespace cc = commoncodes;
 using cc::opt_arg;
 using cc::opt_id;
 using cc::opt;
 using std::nullopt;
+using std::ostringstream;
 using std::string;
 
 int main() {
@@ -28,4 +30,17 @@ int main() {
 
 	assert(opt_arg(opt(), "", nullopt) != oa1);
 	assert(oa1 != oa2);
+
+	ostringstream os;
+
+	os << oa1;
+	assert(os.str() == "--foo");
+
+	os.str(""), os.clear();
+	os << oa2;
+	assert(os.str() == "-barg");
+
+	os.str(""), os.clear();
+	os << opt_arg(opt(), "--yee", "haw");
+	assert(os.str() == "--yee=haw");
 }
