@@ -1,9 +1,11 @@
 #include <cassert>
 #include <commoncodes/bits/args/val_arg.hpp>
+#include <sstream>
 #include <string>
 
 namespace cc = commoncodes;
 using cc::val_arg;
+using std::ostringstream;
 using std::string;
 
 int main() {
@@ -24,4 +26,8 @@ int main() {
 
 	val_arg va3 = val_arg("yeehaw");
 	assert(va1 != va3);
+
+	ostringstream os;
+	os << va1;
+	assert(os.str() == va1.val());
 }
