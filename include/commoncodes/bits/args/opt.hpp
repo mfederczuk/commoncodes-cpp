@@ -22,6 +22,7 @@
 
 #include <commoncodes/bits/args/opt_id.hpp>
 #include <cstdint>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -172,6 +173,12 @@ namespace commoncodes {
 					}
 			};
 	};
+}
+
+template<typename Traits>
+inline std::basic_ostream<char, Traits>& operator<<(std::basic_ostream<char, Traits>& stream,
+                                                    const commoncodes::opt& opt) noexcept {
+	return stream << opt.str();
 }
 
 #endif /* _COMMONCODES_BITS_ARGS_OPT_HPP */

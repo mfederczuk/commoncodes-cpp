@@ -1,5 +1,6 @@
 #include <cassert>
 #include <commoncodes/bits/args/opt.hpp>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -7,6 +8,7 @@ namespace cc = commoncodes;
 using cc::opt_id;
 using cc::opt;
 using cc::unknown_opt_id;
+using std::ostringstream;
 using std::string;
 using std::vector;
 
@@ -38,6 +40,10 @@ int main() {
 
 	assert(opt1 == opt(opt_id1, {'f'}, {"foo"}));
 	assert(opt1 != opt2);
+
+	ostringstream os;
+	os << opt1;
+	assert(os.str() == opt1.str());
 
 
 	assert(opt() == opt::builder().build());
