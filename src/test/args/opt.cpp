@@ -32,6 +32,10 @@ int main() {
 	assert(opt2.arg_optional());
 	assert(!opt2.arg_required());
 
+	assert(opt1.str() == "-f, --foo");
+	assert(opt2.str() == "-b, --bar[=<arg>]");
+	assert(opt(unknown_opt_id, {'a'}, {}, true).str() == "-a<arg>");
+
 	assert(opt1 == opt(opt_id1, {'f'}, {"foo"}));
 	assert(opt1 != opt2);
 

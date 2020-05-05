@@ -85,6 +85,8 @@ namespace commoncodes {
 				return _arg == _arg_optional;
 			}
 
+			std::string str() const noexcept;
+
 			inline bool operator==(const opt& rhs) const noexcept {
 				return _id == rhs._id &&
 				       _short_aliases == rhs._short_aliases &&
