@@ -64,4 +64,15 @@ namespace commoncodes {
 	};
 }
 
+template<typename Traits>
+inline std::basic_ostream<char, Traits>& operator<<(std::basic_ostream<char, Traits>& stream,
+                                                    const commoncodes::arg& arg) noexcept {
+	if(arg.is_val()) {
+		stream << arg.val();
+	} else if(arg.is_opt()) {
+		stream << arg.opt();
+	}
+	return stream;
+}
+
 #endif /* _COMMONCODES_BITS_ARGS_ARG_HPP */

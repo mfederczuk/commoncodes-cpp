@@ -1,6 +1,7 @@
 #include <cassert>
 #include <commoncodes/bits/args/arg.hpp>
 #include <optional>
+#include <sstream>
 #include <string>
 
 namespace cc = commoncodes;
@@ -10,6 +11,7 @@ using cc::opt_id;
 using cc::opt;
 using cc::val_arg;
 using std::nullopt;
+using std::ostringstream;
 using std::string;
 
 int main() {
@@ -43,4 +45,18 @@ int main() {
 
 	assert(arg(val_arg(s1)) == a1);
 	assert(a1 != a2);
+
+
+	ostringstream os1;
+	ostringstream os2;
+
+	os1 << a1;
+	os2 << va1;
+	assert(os1.str() == os2.str());
+
+	os1.str(""), os1.clear();
+	os2.str(""), os2.clear();
+	os1 << a2;
+	os2 << oa1;
+	assert(os1.str() == os2.str());
 }
