@@ -16,14 +16,18 @@ jobs:
       - name: apt-get install valgrind
         run: sudo apt-get install valgrind
 
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
 
       - name: make (GCC)
         run: make CC=gcc CXX=g++
+      - name: make test (GCC)
+        run: make CC=gcc CXX=g++ test
+
       - name: make clean
         run: make clean
+
       - name: make (Clang)
         run: make CC=clang CXX=clang++
-
-      - name: make test
-        run: make test
+      - name: make test (Clang)
+        run: make CC=clang CXX=clang++ test
