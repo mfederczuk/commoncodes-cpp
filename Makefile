@@ -1,5 +1,5 @@
 # C/C++ Makefile Template for applications and libraries.
-# Copyright (C) 2019 Michael Federczuk
+# Copyright (C) 2020 Michael Federczuk
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,11 +19,12 @@
 SOFTWARE = lib
 
 TARGET = commoncodes
+PACKAGE = $(TARGET)
 
 SRC_MAIN = src/main
 SRC_TEST = src/test
 BIN = bin
-INC = include/$(TARGET)
+INC = include/$(PACKAGE)
 
 TEST = ./test --valgrind
 
@@ -32,31 +33,42 @@ CXXFLAGS = -Iinclude -std=c++17 -Wall -Wextra
 
 # === colors ================================================================= #
 
-# reset:     0
-# bold:      1
-# italic:    3
-# underline: 4
-# black:    30  |  bright black:   90
-# red:      31  |  bright red:     91
-# yellow:   33  |  bright yellow:  93
-# green:    32  |  bright green:   92
-# cyan:     36  |  bright cyan:    96
-# blue:     34  |  bright blue:    94
-# magenta:  35  |  bright magenta: 95
-# white:    37  |  bright white:   97
-_ascii_esc = $(shell printf '\033[$(1)m')
+ifneq "$(NO_COLOR)" "1"
+ # reset:      0
+ # bold:       1
+ # italic:     3
+ # underline:  4
+ # black:     30  |  bright black:   90
+ # red:       31  |  bright red:     91
+ # green:     32  |  bright green:   92
+ # yellow:    33  |  bright yellow:  93
+ # blue:      34  |  bright blue:    94
+ # magenta:   35  |  bright magenta: 95
+ # cyan:      36  |  bright cyan:    96
+ # white:     37  |  bright white:   97
+ override _ascii_esc = $(shell printf '\033[$(1)m')
 
-reset_fx        := $(call _ascii_esc,0)
-error_fx        := $(call _ascii_esc,91;1)
-warning_fx      := $(call _ascii_esc,33)
-object_build_fx := $(call _ascii_esc,34)
-target_build_fx := $(call _ascii_esc,34;1)
-test_build_fx   := $(call _ascii_esc,35;1)
-install_fx      := $(call _ascii_esc,32)
-uninstall_fx    := $(call _ascii_esc,91)
-clean_fx        := $(call _ascii_esc,91)
+ override _green_clr_fxn      := 32
+ override _yellow_clr_fxn     := 33
+ override _blue_clr_fxn       := 34
+ override _magenta_clr_fxn    := 35
+ override _bright_red_clr_fxn := 91
+ override _bold_fxn           := 1
+
+ reset_fx        := $(call _ascii_esc,0)
+ error_fx        := $(call _ascii_esc,$(_bright_red_clr_fxn);$(_bold_fxn))
+ warning_fx      := $(call _ascii_esc,$(_yellow_clr_fxn))
+ object_build_fx := $(call _ascii_esc,$(_blue_clr_fxn))
+ target_build_fx := $(call _ascii_esc,$(_blue_clr_fxn);$(_bold_fxn))
+ test_build_fx   := $(call _ascii_esc,$(_magenta_clr_fxn);$(_bold_fxn))
+ install_fx      := $(call _ascii_esc,$(_green_clr_fxn))
+ uninstall_fx    := $(call _ascii_esc,$(_bright_red_clr_fxn))
+ clean_fx        := $(call _ascii_esc,$(_bright_red_clr_fxn))
+endif
 
 # === preconditions ========================================================== #
+
+.SUFFIXES:
 
 -include _debug.mk
 
@@ -64,8 +76,8 @@ ifndef SOFTWARE
  $(error $(error_fx)SOFTWARE is not defined$(reset_fx))
 endif
 override SOFTWARE := $(strip $(SOFTWARE))
-ifeq "$(SOFTWARE),$(TARGET),$(SRC),$(SRC_MAIN),$(SRC_TEST),$(BIN),$(INC),$(LINKS),$(LINK_DIRS),$(TEST),$(CCFLAGS),$(CXXFLAGS)" \
-     "exe|lib,,,src/main,src/test,bin,include/$(TARGET),,,,-Iinclude -std=c17   -Wall -Wextra,-Iinclude -std=c++17 -Wall -Wextra"
+ifeq "$(SOFTWARE),$(TARGET),$(PACKAGE),$(SRC),$(SRC_MAIN),$(SRC_TEST),$(BIN),$(INC),$(LINKS),$(LINK_DIRS),$(TEST),$(CCFLAGS),$(CXXFLAGS)" \
+     "exe|lib,,$(TARGET),,src/main,src/test,bin,include/$(PACKAGE),,,,-Iinclude -std=c17   -Wall -Wextra,-Iinclude -std=c++17 -Wall -Wextra"
  $(error $(error_fx)Makefile is not configured$(reset_fx))
 endif
 ifneq "$(SOFTWARE)" "exe"
@@ -116,6 +128,9 @@ ifndef BIN
  $(error $(error_fx)BIN is not defined$(reset_fx))
 endif
 override BIN := $(strip $(BIN))
+ifeq "$(BIN)" "."
+ $(error $(error_fx)BIN is not allowed to be the root directory$(reset_fx))
+endif
 
 ifneq "$(SOFTWARE)" "exe"
  ifndef INC
@@ -171,7 +186,7 @@ static_lib_prefix = lib
 shared_lib_suffix = .so
 static_lib_suffix = .a
 
-# *nix executables usually don't have a suffix, if you want you can change that
+# unix like executables usually don't have a suffix, if you want you can change that
 exe_prefix =
 exe_suffix =
 
@@ -275,7 +290,7 @@ override TEST_TARGETS     := $(TEST_C_TARGETS) $(TEST_CXX_TARGETS)
 # === default rule =========================================================== #
 
 ifeq "$(SOFTWARE)" "exe"
- all: $(EXE_TARGET)
+ all: target
  .PHONY: all
 else
  all: targets
@@ -286,19 +301,41 @@ endif
 
 ifeq "$(SOFTWARE)" "exe"
  ifneq "$(SRC_TEST)" "/dev/null"
-  _universe: $(EXE_TARGET) tests
+  _universe: target tests
+	$(warning $(warning_fx)The `_universe` target is deprecated, use the `universe` target instead$(reset_fx))
   .PHONY: _universe
  else
-  _universe: $(EXE_TARGET)
+  _universe: target
+	$(warning $(warning_fx)The `_universe` target is deprecated, use the `universe` target instead$(reset_fx))
   .PHONY: _universe
  endif
 else
  ifneq "$(SRC_TEST)" "/dev/null"
   _universe: targets tests
+	$(warning $(warning_fx)The `_universe` target is deprecated, use the `universe` target instead$(reset_fx))
   .PHONY: _universe
  else
   _universe: targets
+	$(warning $(warning_fx)The `_universe` target is deprecated, use the `universe` target instead$(reset_fx))
   .PHONY: _universe
+ endif
+endif
+
+ifeq "$(SOFTWARE)" "exe"
+ ifneq "$(SRC_TEST)" "/dev/null"
+  universe: target tests
+  .PHONY: universe
+ else
+  universe: target
+  .PHONY: universe
+ endif
+else
+ ifneq "$(SRC_TEST)" "/dev/null"
+  universe: targets tests
+  .PHONY: universe
+ else
+  universe: targets
+  .PHONY: universe
  endif
 endif
 
@@ -341,6 +378,7 @@ endif
 # === building targets ======================================================= #
 
 ifeq "$(SOFTWARE)" "exe"
+ target: $(EXE_TARGET)
  $(EXE_TARGET): $(STATIC_OBJECTS)
 	$(info $(target_build_fx)Building target '$@'...$(reset_fx))
   ifeq "$(CXX_SOURCES)" ""
@@ -348,6 +386,7 @@ ifeq "$(SOFTWARE)" "exe"
   else
 	@$(CXX) $(CXXFLAGS) $^ -o '$@' $(LINK_FLAGS)
   endif
+  .PHONY: target
 else
  targets: $(SHARED_LIB_TARGET) $(STATIC_LIB_TARGET)
  $(SHARED_LIB_TARGET): $(SHARED_OBJECTS)
@@ -407,10 +446,12 @@ endif
 # === installing ============================================================= #
 
 ifeq "$(SOFTWARE)" "exe"
- install: $(EXE_TARGET)
-	$(info $(install_fx)Installing target '$@' to '$(DESTDIR)$(bindir)'...$(reset_fx))
-	@$(INSTALL) -m755 '$@' '$(DESTDIR)$(bindir)'
- .PHONY: install
+ install: install/target
+ install/target: install/$(EXE_TARGET)
+ install/$(EXE_TARGET): install/%: %
+	$(info $(install_fx)Installing target '$(@:install/%=%)' to '$(DESTDIR)$(bindir)'...$(reset_fx))
+	@$(INSTALL) -m755 '$(@:install/%=%)' '$(DESTDIR)$(bindir)'
+ .PHONY: install install/target install/$(EXE_TARGET)
 else
  install: install/targets install/headers
  install/targets: install/$(SHARED_LIB_TARGET) install/$(STATIC_LIB_TARGET)
@@ -428,10 +469,12 @@ endif
 # === uninstalling =========================================================== #
 
 ifeq "$(SOFTWARE)" "exe"
- uninstall:
-	@rm -f '$(DESTDIR)$(bindir)/$(EXE_TARGET)' | \
-		sed -E s/'(.*)'/'$(uninstall_fx)\1$(reset_fx)'/g
- .PHONY: uninstall
+ uninstall: uninstall/target
+ uninstall/target: uninstall/$(EXE_TARGET)
+ uninstall/$(EXE_TARGET):
+	@rm -fv '$(DESTDIR)$(bindir)/$(@:uninstall/%=%)' | \
+		$(call _color_pipe,$(uninstall_fx))
+ .PHONY: uninstall uninstall/target uninstall/$(EXE_TARGET)
 else
  uninstall: uninstall/targets uninstall/headers
  uninstall/targets: uninstall/$(SHARED_LIB_TARGET) uninstall/$(STATIC_LIB_TARGET)
@@ -462,22 +505,25 @@ override CLEANING_TEST_TARGETS := $(addprefix clean/,$(TEST_TARGETS))
 
 ifeq "$(SOFTWARE)" "exe"
  ifneq "$(SRC_TEST)" "/dev/null"
-  clean: clean/objects clean/$(EXE_TARGET) clean/tests
+  clean: clean/objects clean/target clean/tests
   .PHONY: clean
  else
-  clean: clean/objects clean/$(EXE_TARGET)
+  clean: clean/objects clean/target
   .PHONY: clean
  endif
 
  clean/objects: $(CLEANING_STATIC_OBJECTS)
+ clean/$(BIN):
+	@rm -rfv '$(BIN)' | $(call _color_pipe,$(clean_fx))
  $(CLEANING_STATIC_OBJECTS): %:
 	@rm -fv '$(@:clean/%=%)' | $(call _color_pipe,$(clean_fx))
 	@$(call _clean_empty_dir,$(BIN))
  .PHONY: clean/objects $(CLEANING_STATIC_OBJECTS)
 
+ clean/target: clean/$(EXE_TARGET)
  clean/$(EXE_TARGET):
-	@rm -fv '$@' | $(call _color_pipe,$(clean_fx))
- .PHONY: clean/$(EXE_TARGET)
+	@rm -fv '$(@:clean/%=%)' | $(call _color_pipe,$(clean_fx))
+ .PHONY: clean/target clean/$(EXE_TARGET)
 
  ifneq "$(SRC_TEST)" "/dev/null"
   clean/tests: $(CLEANING_TEST_TARGETS)
@@ -497,6 +543,8 @@ else
  clean/objects: clean/objects/shared clean/objects/static
  clean/objects/shared: $(CLEANING_SHARED_OBJECTS)
  clean/objects/static: $(CLEANING_STATIC_OBJECTS)
+ clean/$(BIN):
+	@rm -rfv '$(BIN)' | $(call _color_pipe,$(clean_fx))
  $(CLEANING_OBJECTS): %:
 	@rm -fv '$(@:clean/%=%)' | $(call _color_pipe,$(clean_fx))
 	@$(call _clean_empty_dir,$(BIN))
@@ -520,7 +568,7 @@ endif
 # === version ================================================================ #
 
 _version:
-	@echo 2.1.0
+	@echo 2.2.0
 .PHONY: _version
 
 # = other.mk ================================================================= #
