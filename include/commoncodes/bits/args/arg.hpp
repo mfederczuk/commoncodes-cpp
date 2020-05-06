@@ -64,9 +64,8 @@ namespace commoncodes {
 	};
 }
 
-template<typename Traits>
-inline std::basic_ostream<char, Traits>& operator<<(std::basic_ostream<char, Traits>& stream,
-                                                    const commoncodes::arg& arg) noexcept {
+inline std::basic_ostream<char>& operator<<(std::basic_ostream<char>& stream,
+                                            const commoncodes::arg& arg) noexcept {
 	if(arg.is_val()) {
 		stream << arg.val();
 	} else if(arg.is_opt()) {
