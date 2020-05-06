@@ -23,19 +23,25 @@
 #include <commoncodes/bits/args/opt.hpp>
 #include <optional>
 #include <string>
+#include <variant>
 
 namespace commoncodes {
 	struct opt_arg {
 		private:
 			commoncodes::opt _opt;
-			std::string _opt_alias;
+			std::variant<char, std::string> _alias_arg;
 			std::optional<std::string> _arg;
 
 		public:
 			inline opt_arg(const opt& opt,
-			               const std::string& opt_alias,
+			               char alias_arg,
 			               const std::optional<std::string>& arg) noexcept
-					: _opt(opt), _opt_alias(opt_alias), _arg(arg) {
+					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
+			}
+			inline opt_arg(const opt& opt,
+			               const std::string& alias_arg,
+			               const std::optional<std::string>& arg) noexcept
+					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
 			}
 			inline opt_arg() noexcept : opt_arg(opt(), "", std::nullopt) {}
 
@@ -43,8 +49,12 @@ namespace commoncodes {
 				return _opt;
 			}
 
-			inline const std::string& opt_alias() const noexcept {
-				return _opt_alias;
+			inline std::string alias_arg() const noexcept {
+				if(std::holds_alternative<char>(_alias_arg)) {
+					return std::string(1, '-') + std::get<char>(_alias_arg);
+				} else {
+					return "--" + std::get<std::string>(_alias_arg);
+				}
 			}
 
 			constexpr bool has_arg() const noexcept {
@@ -56,12 +66,12 @@ namespace commoncodes {
 
 			inline bool operator==(const opt_arg& rhs) const noexcept {
 				return _opt == rhs._opt &&
-				       _opt_alias == rhs._opt_alias &&
+				       _alias_arg == rhs._alias_arg &&
 				       _arg == rhs._arg;
 			}
 			inline bool operator!=(const opt_arg& rhs) const noexcept {
 				return _opt != rhs._opt ||
-				       _opt_alias != rhs._opt_alias ||
+				       _alias_arg != rhs._alias_arg ||
 				       _arg != rhs._arg;
 			}
 	};

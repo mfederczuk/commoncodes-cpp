@@ -18,7 +18,7 @@ int main() {
 	opt_arg oa1 = opt_arg(opt1, s1, nullopt);
 
 	assert(oa1.opt() == opt1);
-	assert(oa1.opt_alias() == s1);
+	assert(oa1.alias_arg() == s1);
 	assert(!oa1.has_arg());
 
 	opt opt2 = opt(opt_id(1), {'b'}, {"bar"}, true);
