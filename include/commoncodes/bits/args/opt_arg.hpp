@@ -55,10 +55,10 @@ namespace commoncodes {
 				return _alias_arg;
 			}
 			inline std::string alias_arg_str() const noexcept {
-				if(std::holds_alternative<char>(_alias_arg)) {
-					return std::string(1, '-') + std::get<char>(_alias_arg);
-				} else {
-					return "--" + std::get<std::string>(_alias_arg);
+				switch(_alias_arg.index()) {
+					case(0): return std::string(1, '-') + std::get<0>(_alias_arg);
+					case(1): return "--" + std::get<1>(_alias_arg);
+					default: return "";
 				}
 			}
 
