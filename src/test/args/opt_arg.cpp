@@ -27,6 +27,7 @@ int main() {
 	opt_arg oa2 = opt_arg(opt2, c1, arg);
 
 	assert(oa2.has_arg());
+	assert(oa2.alias_arg_str() == string(1, '-') + c1);
 	assert(oa2.arg() == arg);
 
 	assert(opt_arg(opt(), "", nullopt) != oa1);
