@@ -11,23 +11,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: apt-get install clang
-        run: sudo apt-get install clang
       - name: apt-get install valgrind
         run: sudo apt-get install valgrind
 
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: make (GCC)
-        run: make CC=gcc CXX=g++
-      - name: make test (GCC)
-        run: make CC=gcc CXX=g++ test
-
-      - name: make clean
-        run: make clean
-
-      - name: make (Clang)
-        run: make CC=clang CXX=clang++
-      - name: make test (Clang)
-        run: make CC=clang CXX=clang++ test
+      - name: make
+        run: make
+      - name: make test
+        run: make test
