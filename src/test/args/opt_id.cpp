@@ -1,4 +1,5 @@
 #include <commoncodes/bits/args/opt_id.hpp>
+#include <cstddef>
 #include <functional>
 
 namespace cc = commoncodes;

@@ -2,6 +2,7 @@
 #include <commoncodes/bits/args/opt_arg.hpp>
 #include <optional>
 #include <sstream>
+#include <string>
 
 namespace cc = commoncodes;
 using cc::opt_arg;

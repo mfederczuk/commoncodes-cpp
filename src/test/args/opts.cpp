@@ -1,5 +1,6 @@
 #include <cassert>
 #include <commoncodes/bits/args/opts.hpp>
+#include <string>
 #include <typeinfo>
 #include <vector>
 
