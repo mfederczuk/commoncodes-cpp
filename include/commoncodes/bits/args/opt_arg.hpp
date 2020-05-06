@@ -43,7 +43,9 @@ namespace commoncodes {
 			               const std::optional<std::string>& arg) noexcept
 					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
 			}
-			inline opt_arg() noexcept : opt_arg(opt(), "", std::nullopt) {}
+			inline opt_arg() noexcept
+					: opt_arg(commoncodes::opt(), "", std::nullopt) {
+			}
 
 			inline const commoncodes::opt& opt() const noexcept {
 				return _opt;
