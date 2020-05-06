@@ -26,13 +26,13 @@ using std::ostream;
 using std::string;
 
 ostream& operator<<(ostream& stream, const opt_arg& opt_arg) noexcept {
-	const string alias_arg = opt_arg.alias_arg();
-	stream << alias_arg;
+	const string alias_arg_str = opt_arg.alias_arg_str();
+	stream << alias_arg_str;
 
 	if(opt_arg.has_arg()) {
-		if(alias_arg.length() > 2 && alias_arg.substr(0, 2) == "--") {
+		if(alias_arg_str.length() > 2 && alias_arg_str.substr(0, 2) == "--") {
 			stream << '=' << opt_arg.arg();
-		} else if(alias_arg.length() > 1 && alias_arg[0] == '-') {
+		} else if(alias_arg_str.length() > 1 && alias_arg_str[0] == '-') {
 			stream << opt_arg.arg();
 		}
 	}

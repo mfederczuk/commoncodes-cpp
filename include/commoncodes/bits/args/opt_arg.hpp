@@ -51,7 +51,7 @@ namespace commoncodes {
 				return _opt;
 			}
 
-			inline std::string alias_arg() const noexcept {
+			inline std::string alias_arg_str() const noexcept {
 				if(std::holds_alternative<char>(_alias_arg)) {
 					return std::string(1, '-') + std::get<char>(_alias_arg);
 				} else {
