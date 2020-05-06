@@ -29,17 +29,19 @@ using std::string;
 using std::variant;
 
 ostream& operator<<(ostream& stream, const opt_arg& opt_arg) noexcept {
-	stream << opt_arg.alias_arg_str();
+	string msg;
+
+	msg += opt_arg.alias_arg_str();
 
 	if(opt_arg.has_arg()) {
 		const variant<char, string>& alias_arg = opt_arg.alias_arg();
 
 		if(holds_alternative<char>(alias_arg)) {
-			stream << opt_arg.arg();
+			msg += opt_arg.arg();
 		} else if(holds_alternative<string>(alias_arg)) {
-			stream << '=' << opt_arg.arg();
+			msg += '=' + opt_arg.arg();
 		}
 	}
 
-	return stream;
+	return (stream << msg);
 }
