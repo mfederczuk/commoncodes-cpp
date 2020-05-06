@@ -18,7 +18,7 @@
 
 SOFTWARE = lib
 
-TARGET = commoncodes
+TARGET = commoncodes++
 
 SRC_MAIN = src/main
 SRC_TEST = src/test
