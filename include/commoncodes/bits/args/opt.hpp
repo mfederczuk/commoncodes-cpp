@@ -175,8 +175,8 @@ namespace commoncodes {
 	};
 }
 
-inline std::basic_ostream<char>& operator<<(std::basic_ostream<char>& stream,
-                                            const commoncodes::opt& opt) noexcept {
+inline std::ostream& operator<<(std::ostream& stream,
+                                const commoncodes::opt& opt) noexcept {
 	return stream << opt.str();
 }
 

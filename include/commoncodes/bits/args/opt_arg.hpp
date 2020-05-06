@@ -67,7 +67,7 @@ namespace commoncodes {
 	};
 }
 
-std::basic_ostream<char>& operator<<(std::basic_ostream<char>& stream,
-                                     const commoncodes::opt_arg& opt_arg) noexcept;
+std::ostream& operator<<(std::ostream& stream,
+                         const commoncodes::opt_arg& opt_arg) noexcept;
 
 #endif /* _COMMONCODES_BITS_ARGS_OPT_ARG_HPP */

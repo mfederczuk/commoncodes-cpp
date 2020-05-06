@@ -64,8 +64,8 @@ namespace commoncodes {
 	};
 }
 
-inline std::basic_ostream<char>& operator<<(std::basic_ostream<char>& stream,
-                                            const commoncodes::arg& arg) noexcept {
+inline std::ostream& operator<<(std::ostream& stream,
+                                const commoncodes::arg& arg) noexcept {
 	if(arg.is_val()) {
 		stream << arg.val();
 	} else if(arg.is_opt()) {

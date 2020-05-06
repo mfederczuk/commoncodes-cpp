@@ -22,12 +22,10 @@
 
 namespace cc = commoncodes;
 using cc::opt_arg;
-using std::basic_ostream;
+using std::ostream;
 using std::string;
 
-basic_ostream<char>& operator<<(basic_ostream<char>& stream,
-                                const opt_arg& opt_arg) noexcept {
-
+ostream& operator<<(ostream& stream, const opt_arg& opt_arg) noexcept {
 	const string& alias = opt_arg.opt_alias();
 	stream << alias;
 
