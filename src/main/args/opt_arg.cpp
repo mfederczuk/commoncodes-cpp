@@ -19,21 +19,25 @@
 #include <commoncodes/bits/args/opt_arg.hpp>
 #include <ostream>
 #include <string>
+#include <variant>
 
 namespace cc = commoncodes;
 using cc::opt_arg;
+using std::holds_alternative;
 using std::ostream;
 using std::string;
+using std::variant;
 
 ostream& operator<<(ostream& stream, const opt_arg& opt_arg) noexcept {
-	const string alias_arg_str = opt_arg.alias_arg_str();
-	stream << alias_arg_str;
+	stream << opt_arg.alias_arg_str();
 
 	if(opt_arg.has_arg()) {
-		if(alias_arg_str.length() > 2 && alias_arg_str.substr(0, 2) == "--") {
-			stream << '=' << opt_arg.arg();
-		} else if(alias_arg_str.length() > 1 && alias_arg_str[0] == '-') {
+		const variant<char, string>& alias_arg = opt_arg.alias_arg();
+
+		if(holds_alternative<char>(alias_arg)) {
 			stream << opt_arg.arg();
+		} else if(holds_alternative<string>(alias_arg)) {
+			stream << '=' << opt_arg.arg();
 		}
 	}
 

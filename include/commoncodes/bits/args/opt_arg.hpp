@@ -51,6 +51,9 @@ namespace commoncodes {
 				return _opt;
 			}
 
+			constexpr const std::variant<char, std::string>& alias_arg() const noexcept {
+				return _alias_arg;
+			}
 			inline std::string alias_arg_str() const noexcept {
 				if(std::holds_alternative<char>(_alias_arg)) {
 					return std::string(1, '-') + std::get<char>(_alias_arg);
