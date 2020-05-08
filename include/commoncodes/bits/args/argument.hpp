@@ -1,4 +1,4 @@
-// <commoncodes/bits/args/arg.hpp>
+// <commoncodes/bits/args/argument.hpp>
 /*
  * C++ command line tool library.
  * Copyright (C) 2020 Michael Federczuk
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _COMMONCODES_BITS_ARGS_ARG_HPP
-#define _COMMONCODES_BITS_ARGS_ARG_HPP
+#ifndef _COMMONCODES_BITS_ARGS_ARGUMENT_HPP
+#define _COMMONCODES_BITS_ARGS_ARGUMENT_HPP
 
 #include <commoncodes/bits/args/option_argument.hpp>
 #include <commoncodes/bits/args/value_argument.hpp>
@@ -26,14 +26,14 @@
 #include <variant>
 
 namespace commoncodes {
-	struct arg {
+	struct argument {
 		private:
 			std::variant<value_argument, option_argument> _arg;
 
 		public:
-			inline arg(const value_argument& val_arg) noexcept : _arg(val_arg) {}
-			inline arg(const option_argument& opt_arg) noexcept : _arg(opt_arg) {}
-			inline arg() : arg(value_argument()) {}
+			inline argument(const value_argument& val_arg) noexcept : _arg(val_arg) {}
+			inline argument(const option_argument& opt_arg) noexcept : _arg(opt_arg) {}
+			inline argument() : argument(value_argument()) {}
 
 			constexpr bool is_val() const noexcept {
 				return std::holds_alternative<value_argument>(_arg);
@@ -56,17 +56,17 @@ namespace commoncodes {
 				return opt();
 			}
 
-			inline bool operator==(const arg& rhs) const noexcept {
+			inline bool operator==(const argument& rhs) const noexcept {
 				return _arg == rhs._arg;
 			}
-			inline bool operator!=(const arg& rhs) const noexcept {
+			inline bool operator!=(const argument& rhs) const noexcept {
 				return _arg != rhs._arg;
 			}
 	};
 }
 
 inline std::ostream& operator<<(std::ostream& stream,
-                                const commoncodes::arg& arg) noexcept {
+                                const commoncodes::argument& arg) noexcept {
 	if(arg.is_val()) {
 		stream << arg.val();
 	} else if(arg.is_opt()) {
@@ -75,4 +75,4 @@ inline std::ostream& operator<<(std::ostream& stream,
 	return stream;
 }
 
-#endif /* _COMMONCODES_BITS_ARGS_ARG_HPP */
+#endif /* _COMMONCODES_BITS_ARGS_ARGUMENT_HPP */
