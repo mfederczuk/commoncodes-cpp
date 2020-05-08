@@ -22,6 +22,7 @@
 
 #include <commoncodes/bits/args/opt_arg.hpp>
 #include <commoncodes/bits/args/val_arg.hpp>
+#include <ostream>
 #include <variant>
 
 namespace commoncodes {

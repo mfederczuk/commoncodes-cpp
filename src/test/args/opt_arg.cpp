@@ -1,5 +1,7 @@
 #include <cassert>
 #include <commoncodes/bits/args/opt_arg.hpp>
+#include <commoncodes/bits/args/option_id.hpp>
+#include <commoncodes/bits/args/option.hpp>
 #include <optional>
 #include <sstream>
 #include <string>

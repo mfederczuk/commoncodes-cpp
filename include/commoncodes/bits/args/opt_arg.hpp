@@ -22,6 +22,7 @@
 
 #include <commoncodes/bits/args/option.hpp>
 #include <optional>
+#include <ostream>
 #include <string>
 #include <variant>
 

@@ -20,6 +20,7 @@
 #ifndef _COMMONCODES_BITS_ARGS_OPTS_HPP
 #define _COMMONCODES_BITS_ARGS_OPTS_HPP
 
+#include <commoncodes/bits/args/option_id.hpp>
 #include <commoncodes/bits/args/option.hpp>
 
 #define commoncodes_opt(name, id_) \

@@ -1,4 +1,6 @@
 #include <cassert>
+#include <commoncodes/bits/args/option_id.hpp>
+#include <commoncodes/bits/args/option.hpp>
 #include <commoncodes/bits/args/opts.hpp>
 #include <string>
 #include <typeinfo>
