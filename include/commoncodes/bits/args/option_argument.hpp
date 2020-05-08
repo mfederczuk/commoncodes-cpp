@@ -1,4 +1,4 @@
-// <commoncodes/bits/args/opt_arg.hpp>
+// <commoncodes/bits/args/option_argument.hpp>
 /*
  * C++ command line tool library.
  * Copyright (C) 2020 Michael Federczuk
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
-#define _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
+#ifndef _COMMONCODES_BITS_ARGS_OPTION_ARGUMENT_HPP
+#define _COMMONCODES_BITS_ARGS_OPTION_ARGUMENT_HPP
 
 #include <commoncodes/bits/args/option.hpp>
 #include <optional>
@@ -27,25 +27,25 @@
 #include <variant>
 
 namespace commoncodes {
-	struct opt_arg {
+	struct option_argument {
 		private:
 			option _opt;
 			std::variant<char, std::string> _alias_arg;
 			std::optional<std::string> _arg;
 
 		public:
-			inline opt_arg(const option& opt,
-			               char alias_arg,
-			               const std::optional<std::string>& arg) noexcept
+			inline option_argument(const option& opt,
+			                       char alias_arg,
+			                       const std::optional<std::string>& arg) noexcept
 					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
 			}
-			inline opt_arg(const option& opt,
-			               const std::string& alias_arg,
-			               const std::optional<std::string>& arg) noexcept
+			inline option_argument(const option& opt,
+			                       const std::string& alias_arg,
+			                       const std::optional<std::string>& arg) noexcept
 					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
 			}
-			inline opt_arg() noexcept
-					: opt_arg(option(), "", std::nullopt) {
+			inline option_argument() noexcept
+					: option_argument(option(), "", std::nullopt) {
 			}
 
 			inline const option& opt() const noexcept {
@@ -70,12 +70,12 @@ namespace commoncodes {
 				return _arg.value_or("");
 			}
 
-			inline bool operator==(const opt_arg& rhs) const noexcept {
+			inline bool operator==(const option_argument& rhs) const noexcept {
 				return _opt == rhs._opt &&
 				       _alias_arg == rhs._alias_arg &&
 				       _arg == rhs._arg;
 			}
-			inline bool operator!=(const opt_arg& rhs) const noexcept {
+			inline bool operator!=(const option_argument& rhs) const noexcept {
 				return _opt != rhs._opt ||
 				       _alias_arg != rhs._alias_arg ||
 				       _arg != rhs._arg;
@@ -84,6 +84,6 @@ namespace commoncodes {
 }
 
 std::ostream& operator<<(std::ostream& stream,
-                         const commoncodes::opt_arg& opt_arg) noexcept;
+                         const commoncodes::option_argument& opt_arg) noexcept;
 
-#endif /* _COMMONCODES_BITS_ARGS_OPT_ARG_HPP */
+#endif /* _COMMONCODES_BITS_ARGS_OPTION_ARGUMENT_HPP */

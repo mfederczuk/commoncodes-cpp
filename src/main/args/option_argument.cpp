@@ -16,19 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <commoncodes/bits/args/opt_arg.hpp>
+#include <commoncodes/bits/args/option_argument.hpp>
 #include <ostream>
 #include <string>
 #include <variant>
 
 namespace cc = commoncodes;
-using cc::opt_arg;
+using cc::option_argument;
 using std::holds_alternative;
 using std::ostream;
 using std::string;
 using std::variant;
 
-ostream& operator<<(ostream& stream, const opt_arg& opt_arg) noexcept {
+ostream& operator<<(ostream& stream, const option_argument& opt_arg) noexcept {
 	string msg;
 
 	msg += opt_arg.alias_arg_str();

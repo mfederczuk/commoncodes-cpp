@@ -1,6 +1,6 @@
 #include <cassert>
 #include <commoncodes/bits/args/arg.hpp>
-#include <commoncodes/bits/args/opt_arg.hpp>
+#include <commoncodes/bits/args/option_argument.hpp>
 #include <commoncodes/bits/args/option_id.hpp>
 #include <commoncodes/bits/args/option.hpp>
 #include <commoncodes/bits/args/val_arg.hpp>
@@ -10,7 +10,7 @@
 
 namespace cc = commoncodes;
 using cc::arg;
-using cc::opt_arg;
+using cc::option_argument;
 using cc::option_id;
 using cc::option;
 using cc::val_arg;
@@ -32,13 +32,13 @@ int main() {
 
 	option o1 = option(option_id(0), {'f'}, {"foo"});
 	string s2 = "-f";
-	opt_arg oa1 = opt_arg(o1, s2, nullopt);
+	option_argument oa1 = option_argument(o1, s2, nullopt);
 	arg a2 = arg(oa1);
 
 	assert(a2.is_opt());
 	assert(a2.opt() == oa1);
 
-	opt_arg oa2 = a2;
+	option_argument oa2 = a2;
 	assert(oa1 == oa2);
 
 
