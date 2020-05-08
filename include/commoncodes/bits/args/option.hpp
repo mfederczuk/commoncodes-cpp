@@ -131,7 +131,7 @@ namespace commoncodes {
 						return *this;
 					}
 					inline builder& alias(char short_alias,
-					                                       const std::string& long_alias) noexcept {
+					                      const std::string& long_alias) noexcept {
 						return alias(short_alias).alias(long_alias);
 					}
 

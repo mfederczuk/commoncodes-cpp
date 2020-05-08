@@ -31,8 +31,12 @@ namespace commoncodes {
 			std::variant<value_argument, option_argument> _arg;
 
 		public:
-			inline argument(const value_argument& val_arg) noexcept : _arg(val_arg) {}
-			inline argument(const option_argument& opt_arg) noexcept : _arg(opt_arg) {}
+			inline argument(const value_argument& val_arg) noexcept
+					: _arg(val_arg) {
+			}
+			inline argument(const option_argument& opt_arg) noexcept
+					: _arg(opt_arg) {
+			}
 			inline argument() : argument(value_argument()) {}
 
 			constexpr bool is_val() const noexcept {

@@ -29,7 +29,9 @@ namespace commoncodes {
 			std::string _val;
 
 		public:
-			inline value_argument(const std::string& val = "") noexcept : _val(val) {}
+			inline value_argument(const std::string& val = "") noexcept
+					: _val(val) {
+			}
 
 			inline const std::string& val() const noexcept {
 				return _val;
