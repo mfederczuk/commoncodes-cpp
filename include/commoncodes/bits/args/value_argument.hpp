@@ -1,4 +1,4 @@
-// <commoncodes/bits/args/val_arg.hpp>
+// <commoncodes/bits/args/value_argument.hpp>
 /*
  * C++ command line tool library.
  * Copyright (C) 2020 Michael Federczuk
@@ -17,19 +17,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _COMMONCODES_BITS_ARGS_VAL_ARG_HPP
-#define _COMMONCODES_BITS_ARGS_VAL_ARG_HPP
+#ifndef _COMMONCODES_BITS_ARGS_VALUE_ARGUMENT_HPP
+#define _COMMONCODES_BITS_ARGS_VALUE_ARGUMENT_HPP
 
 #include <ostream>
 #include <string>
 
 namespace commoncodes {
-	struct val_arg {
+	struct value_argument {
 		private:
 			std::string _val;
 
 		public:
-			inline val_arg(const std::string& val = "") noexcept : _val(val) {}
+			inline value_argument(const std::string& val = "") noexcept : _val(val) {}
 
 			inline const std::string& val() const noexcept {
 				return _val;
@@ -45,18 +45,18 @@ namespace commoncodes {
 				return &_val;
 			}
 
-			inline bool operator==(const val_arg& rhs) const noexcept {
+			inline bool operator==(const value_argument& rhs) const noexcept {
 				return _val == rhs._val;
 			}
-			inline bool operator!=(const val_arg& rhs) const noexcept {
+			inline bool operator!=(const value_argument& rhs) const noexcept {
 				return _val != rhs._val;
 			}
 	};
 }
 
 inline std::ostream& operator<<(std::ostream& stream,
-                                const commoncodes::val_arg& val_arg) noexcept {
+                                const commoncodes::value_argument& val_arg) noexcept {
 	return stream << val_arg.val();
 }
 
-#endif /* _COMMONCODES_BITS_ARGS_VAL_ARG_HPP */
+#endif /* _COMMONCODES_BITS_ARGS_VALUE_ARGUMENT_HPP */

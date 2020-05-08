@@ -3,7 +3,7 @@
 #include <commoncodes/bits/args/option_argument.hpp>
 #include <commoncodes/bits/args/option_id.hpp>
 #include <commoncodes/bits/args/option.hpp>
-#include <commoncodes/bits/args/val_arg.hpp>
+#include <commoncodes/bits/args/value_argument.hpp>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -13,20 +13,20 @@ using cc::arg;
 using cc::option_argument;
 using cc::option_id;
 using cc::option;
-using cc::val_arg;
+using cc::value_argument;
 using std::nullopt;
 using std::ostringstream;
 using std::string;
 
 int main() {
 	string s1 = "foobar";
-	val_arg va1 = val_arg(s1);
+	value_argument va1 = value_argument(s1);
 	arg a1 = arg(va1);
 
 	assert(a1.is_val());
 	assert(a1.val() == va1);
 
-	val_arg va2 = a1;
+	value_argument va2 = a1;
 	assert(va1 == va2);
 
 
@@ -44,10 +44,10 @@ int main() {
 
 	arg a3 = arg();
 	assert(a3.is_val());
-	assert(a3.val() == val_arg());
+	assert(a3.val() == value_argument());
 
 
-	assert(arg(val_arg(s1)) == a1);
+	assert(arg(value_argument(s1)) == a1);
 	assert(a1 != a2);
 
 

@@ -21,31 +21,31 @@
 #define _COMMONCODES_BITS_ARGS_ARG_HPP
 
 #include <commoncodes/bits/args/option_argument.hpp>
-#include <commoncodes/bits/args/val_arg.hpp>
+#include <commoncodes/bits/args/value_argument.hpp>
 #include <ostream>
 #include <variant>
 
 namespace commoncodes {
 	struct arg {
 		private:
-			std::variant<val_arg, option_argument> _arg;
+			std::variant<value_argument, option_argument> _arg;
 
 		public:
-			inline arg(const val_arg& val_arg) noexcept : _arg(val_arg) {}
+			inline arg(const value_argument& val_arg) noexcept : _arg(val_arg) {}
 			inline arg(const option_argument& opt_arg) noexcept : _arg(opt_arg) {}
-			inline arg() : arg(val_arg()) {}
+			inline arg() : arg(value_argument()) {}
 
 			constexpr bool is_val() const noexcept {
-				return std::holds_alternative<val_arg>(_arg);
+				return std::holds_alternative<value_argument>(_arg);
 			}
 			constexpr bool is_opt() const noexcept {
 				return std::holds_alternative<option_argument>(_arg);
 			}
 
-			inline const val_arg& val() const {
-				return std::get<val_arg>(_arg);
+			inline const value_argument& val() const {
+				return std::get<value_argument>(_arg);
 			}
-			inline operator val_arg() const {
+			inline operator value_argument() const {
 				return val();
 			}
 

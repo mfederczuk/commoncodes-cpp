@@ -1,16 +1,16 @@
 #include <cassert>
-#include <commoncodes/bits/args/val_arg.hpp>
+#include <commoncodes/bits/args/value_argument.hpp>
 #include <sstream>
 #include <string>
 
 namespace cc = commoncodes;
-using cc::val_arg;
+using cc::value_argument;
 using std::ostringstream;
 using std::string;
 
 int main() {
 	string s1 = "foobar";
-	val_arg va1 = val_arg(s1);
+	value_argument va1 = value_argument(s1);
 
 	assert(va1.val() == s1);
 
@@ -21,10 +21,10 @@ int main() {
 
 	assert(va1->length() == s1.length());
 
-	val_arg va2 = val_arg(s2);
+	value_argument va2 = value_argument(s2);
 	assert(va1 == va2);
 
-	val_arg va3 = val_arg("yeehaw");
+	value_argument va3 = value_argument("yeehaw");
 	assert(va1 != va3);
 
 	ostringstream os;
