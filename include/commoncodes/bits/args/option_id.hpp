@@ -1,4 +1,4 @@
-// <commoncodes/bits/args/opt_id.hpp>
+// <commoncodes/bits/args/option_id.hpp>
 /*
  * C++ command line tool library.
  * Copyright (C) 2020 Michael Federczuk
@@ -17,14 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _COMMONCODES_BITS_ARGS_OPT_ID_HPP
-#define _COMMONCODES_BITS_ARGS_OPT_ID_HPP
+#ifndef _COMMONCODES_BITS_ARGS_OPTION_ID_HPP
+#define _COMMONCODES_BITS_ARGS_OPTION_ID_HPP
 
 #include <cstddef>
 #include <functional>
 
 namespace commoncodes {
-	struct opt_id {
+	struct option_id {
 		private:
 			static constexpr size_t hash_str(const char* str) noexcept {
 				size_t hash = 1;
@@ -39,40 +39,40 @@ namespace commoncodes {
 			size_t _id;
 
 		public:
-			constexpr opt_id(size_t id) noexcept : _id(id) {}
-			constexpr opt_id(int id) noexcept : opt_id((size_t)id) {}
+			constexpr option_id(size_t id) noexcept : _id(id) {}
+			constexpr option_id(int id) noexcept : option_id((size_t)id) {}
 
-			explicit constexpr opt_id(char short_alias) noexcept
-					: opt_id((size_t)short_alias * 2) {
+			explicit constexpr option_id(char short_alias) noexcept
+					: option_id((size_t)short_alias * 2) {
 			}
-			explicit constexpr opt_id(const char* long_alias) noexcept
-					: opt_id(hash_str(long_alias)) {
+			explicit constexpr option_id(const char* long_alias) noexcept
+					: option_id(hash_str(long_alias)) {
 			}
 
 			constexpr size_t id() const noexcept {
 				return _id;
 			}
 
-			constexpr bool operator==(const opt_id& rhs) const noexcept {
+			constexpr bool operator==(const option_id& rhs) const noexcept {
 				return _id == rhs._id;
 			}
-			constexpr bool operator!=(const opt_id& rhs) const noexcept {
+			constexpr bool operator!=(const option_id& rhs) const noexcept {
 				return _id != rhs._id;
 			}
 
-			friend struct std::hash<opt_id>;
+			friend struct std::hash<option_id>;
 	};
 
-	inline constexpr const opt_id unknown_opt_id = opt_id((size_t)-1);
+	inline constexpr const option_id unknown_option_id = option_id((size_t)-1);
 }
 
 namespace std {
 	template<>
-	struct hash<commoncodes::opt_id> {
-		constexpr size_t operator()(const commoncodes::opt_id& opt_id) const noexcept {
+	struct hash<commoncodes::option_id> {
+		constexpr size_t operator()(const commoncodes::option_id& opt_id) const noexcept {
 			return opt_id._id;
 		}
 	};
 }
 
-#endif /* _COMMONCODES_BITS_ARGS_OPT_ID_HPP */
+#endif /* _COMMONCODES_BITS_ARGS_OPTION_ID_HPP */

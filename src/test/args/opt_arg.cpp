@@ -6,14 +6,14 @@
 
 namespace cc = commoncodes;
 using cc::opt_arg;
-using cc::opt_id;
 using cc::opt;
+using cc::option_id;
 using std::nullopt;
 using std::ostringstream;
 using std::string;
 
 int main() {
-	opt opt1 = opt(opt_id(0), {'f'}, {"foo"});
+	opt opt1 = opt(option_id(0), {'f'}, {"foo"});
 	string s1 = "foo";
 	opt_arg oa1 = opt_arg(opt1, s1, nullopt);
 
@@ -21,7 +21,7 @@ int main() {
 	assert(oa1.alias_arg_str() == "--" + s1);
 	assert(!oa1.has_arg());
 
-	opt opt2 = opt(opt_id(1), {'b'}, {"bar"}, true);
+	opt opt2 = opt(option_id(1), {'b'}, {"bar"}, true);
 	char c1 = 'b';
 	string arg = "arg";
 	opt_arg oa2 = opt_arg(opt2, c1, arg);

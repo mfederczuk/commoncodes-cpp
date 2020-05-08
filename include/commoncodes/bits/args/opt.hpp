@@ -20,7 +20,7 @@
 #ifndef _COMMONCODES_BITS_ARGS_OPT_HPP
 #define _COMMONCODES_BITS_ARGS_OPT_HPP
 
-#include <commoncodes/bits/args/opt_id.hpp>
+#include <commoncodes/bits/args/option_id.hpp>
 #include <cstdint>
 #include <ostream>
 #include <string>
@@ -33,12 +33,12 @@ namespace commoncodes {
 			static constexpr uint8_t _arg_required = 1;
 			static constexpr uint8_t _arg_optional = 2;
 
-			opt_id _id;
+			option_id _id;
 			std::vector<char> _short_aliases;
 			std::vector<std::string> _long_aliases;
 			uint8_t _arg;
 
-			inline opt(const opt_id& id,
+			inline opt(const option_id& id,
 			           const std::vector<char>& short_aliases,
 			           const std::vector<std::string>& long_aliases,
 			           uint8_t arg) noexcept
@@ -49,7 +49,7 @@ namespace commoncodes {
 			}
 
 		public:
-			inline opt(const opt_id& id,
+			inline opt(const option_id& id,
 			           const std::vector<char>& short_aliases,
 			           const std::vector<std::string>& long_aliases,
 			           bool arg_required) noexcept
@@ -58,14 +58,14 @@ namespace commoncodes {
 					      long_aliases,
 					      arg_required ? _arg_required : _arg_optional) {
 			}
-			inline opt(const opt_id& id,
+			inline opt(const option_id& id,
 			           const std::vector<char>& short_aliases,
 			           const std::vector<std::string>& long_aliases) noexcept
 					: opt(id, short_aliases, long_aliases, _no_arg) {
 			}
-			inline opt() noexcept : opt(unknown_opt_id, {}, {}) {}
+			inline opt() noexcept : opt(unknown_option_id, {}, {}) {}
 
-			constexpr const opt_id& id() const noexcept {
+			constexpr const option_id& id() const noexcept {
 				return _id;
 			}
 
@@ -103,7 +103,7 @@ namespace commoncodes {
 
 			struct builder {
 				private:
-					opt_id _id = unknown_opt_id;
+					option_id _id = unknown_option_id;
 					std::vector<char> _short_aliases = {};
 					std::vector<std::string> _long_aliases = {};
 					uint8_t _arg = _no_arg;
@@ -111,15 +111,15 @@ namespace commoncodes {
 				public:
 					inline builder() {}
 
-					inline builder& id(const opt_id& id) noexcept {
+					inline builder& id(const option_id& id) noexcept {
 						this->_id = id;
 						return *this;
 					}
 					inline builder& id(char id) noexcept {
-						return this->id(opt_id(id));
+						return this->id(option_id(id));
 					}
 					inline builder& id(const std::string& id) noexcept {
-						return this->id(opt_id(id.c_str()));
+						return this->id(option_id(id.c_str()));
 					}
 
 					inline builder& alias(char short_alias) noexcept {
