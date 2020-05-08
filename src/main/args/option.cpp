@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <commoncodes/bits/args/opt.hpp>
+#include <commoncodes/bits/args/option.hpp>
 #include <string>
 #include <vector>
 
 namespace cc = commoncodes;
-using cc::opt;
+using cc::option;
 using std::string;
 using std::vector;
 
-string opt::str() const noexcept {
+string option::str() const noexcept {
 	vector<string> aliases;
 
 	for(const char short_alias : _short_aliases) {

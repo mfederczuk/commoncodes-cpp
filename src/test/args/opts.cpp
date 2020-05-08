@@ -6,8 +6,8 @@
 
 namespace cc = commoncodes;
 namespace opts = cc::opts;
-using cc::opt;
 using cc::option_id;
+using cc::option;
 using std::string;
 using std::type_info;
 using std::vector;
@@ -16,7 +16,7 @@ commoncodes_opt(foo, "::foo").alias('f', "foo").arg_required();
 commoncodes_opt(bar, "::bar").aliases({'b', 'c'}, {"bar", "baz"});
 
 int main() {
-	const type_info& opt_info = typeid(opt);
+	const type_info& opt_info = typeid(option);
 	assert(opt_info == typeid(opts::help));
 	assert(opt_info == typeid(opts::version_info));
 	assert(opt_info == typeid(opts::commoncodes_version));

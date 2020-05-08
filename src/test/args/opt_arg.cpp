@@ -6,14 +6,14 @@
 
 namespace cc = commoncodes;
 using cc::opt_arg;
-using cc::opt;
 using cc::option_id;
+using cc::option;
 using std::nullopt;
 using std::ostringstream;
 using std::string;
 
 int main() {
-	opt opt1 = opt(option_id(0), {'f'}, {"foo"});
+	option opt1 = option(option_id(0), {'f'}, {"foo"});
 	string s1 = "foo";
 	opt_arg oa1 = opt_arg(opt1, s1, nullopt);
 
@@ -21,7 +21,7 @@ int main() {
 	assert(oa1.alias_arg_str() == "--" + s1);
 	assert(!oa1.has_arg());
 
-	opt opt2 = opt(option_id(1), {'b'}, {"bar"}, true);
+	option opt2 = option(option_id(1), {'b'}, {"bar"}, true);
 	char c1 = 'b';
 	string arg = "arg";
 	opt_arg oa2 = opt_arg(opt2, c1, arg);
@@ -30,7 +30,7 @@ int main() {
 	assert(oa2.alias_arg_str() == string(1, '-') + c1);
 	assert(oa2.arg() == arg);
 
-	assert(opt_arg(opt(), "", nullopt) != oa1);
+	assert(opt_arg(option(), "", nullopt) != oa1);
 	assert(oa1 != oa2);
 
 	ostringstream os;
@@ -43,6 +43,6 @@ int main() {
 	assert(os.str() == "-barg");
 
 	os.str(""), os.clear();
-	os << opt_arg(opt(), "yee", "haw");
+	os << opt_arg(option(), "yee", "haw");
 	assert(os.str() == "--yee=haw");
 }

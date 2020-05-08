@@ -1,4 +1,4 @@
-// <commoncodes/bits/args/opt.hpp>
+// <commoncodes/bits/args/option.hpp>
 /*
  * C++ command line tool library.
  * Copyright (C) 2020 Michael Federczuk
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _COMMONCODES_BITS_ARGS_OPT_HPP
-#define _COMMONCODES_BITS_ARGS_OPT_HPP
+#ifndef _COMMONCODES_BITS_ARGS_OPTION_HPP
+#define _COMMONCODES_BITS_ARGS_OPTION_HPP
 
 #include <commoncodes/bits/args/option_id.hpp>
 #include <cstdint>
@@ -27,7 +27,7 @@
 #include <vector>
 
 namespace commoncodes {
-	struct opt {
+	struct option {
 		private:
 			static constexpr uint8_t _no_arg = 0;
 			static constexpr uint8_t _arg_required = 1;
@@ -38,10 +38,10 @@ namespace commoncodes {
 			std::vector<std::string> _long_aliases;
 			uint8_t _arg;
 
-			inline opt(const option_id& id,
-			           const std::vector<char>& short_aliases,
-			           const std::vector<std::string>& long_aliases,
-			           uint8_t arg) noexcept
+			inline option(const option_id& id,
+			              const std::vector<char>& short_aliases,
+			              const std::vector<std::string>& long_aliases,
+			              uint8_t arg) noexcept
 					: _id(id),
 					  _short_aliases(short_aliases),
 					  _long_aliases(long_aliases),
@@ -49,21 +49,21 @@ namespace commoncodes {
 			}
 
 		public:
-			inline opt(const option_id& id,
-			           const std::vector<char>& short_aliases,
-			           const std::vector<std::string>& long_aliases,
-			           bool arg_required) noexcept
-					: opt(id,
-					      short_aliases,
-					      long_aliases,
-					      arg_required ? _arg_required : _arg_optional) {
+			inline option(const option_id& id,
+			              const std::vector<char>& short_aliases,
+			              const std::vector<std::string>& long_aliases,
+			              bool arg_required) noexcept
+					: option(id,
+					         short_aliases,
+					         long_aliases,
+					         arg_required ? _arg_required : _arg_optional) {
 			}
-			inline opt(const option_id& id,
-			           const std::vector<char>& short_aliases,
-			           const std::vector<std::string>& long_aliases) noexcept
-					: opt(id, short_aliases, long_aliases, _no_arg) {
+			inline option(const option_id& id,
+			              const std::vector<char>& short_aliases,
+			              const std::vector<std::string>& long_aliases) noexcept
+					: option(id, short_aliases, long_aliases, _no_arg) {
 			}
-			inline opt() noexcept : opt(unknown_option_id, {}, {}) {}
+			inline option() noexcept : option(unknown_option_id, {}, {}) {}
 
 			constexpr const option_id& id() const noexcept {
 				return _id;
@@ -88,13 +88,13 @@ namespace commoncodes {
 
 			std::string str() const noexcept;
 
-			inline bool operator==(const opt& rhs) const noexcept {
+			inline bool operator==(const option& rhs) const noexcept {
 				return _id == rhs._id &&
 				       _short_aliases == rhs._short_aliases &&
 				       _long_aliases == rhs._long_aliases &&
 				       _arg == rhs._arg;
 			}
-			inline bool operator!=(const opt& rhs) const noexcept {
+			inline bool operator!=(const option& rhs) const noexcept {
 				return _id != rhs._id ||
 				       _short_aliases != rhs._short_aliases ||
 				       _long_aliases != rhs._long_aliases ||
@@ -165,10 +165,10 @@ namespace commoncodes {
 						return *this;
 					}
 
-					inline opt build() const noexcept {
-						return opt(_id, _short_aliases, _long_aliases, _arg);
+					inline option build() const noexcept {
+						return option(_id, _short_aliases, _long_aliases, _arg);
 					}
-					inline operator opt() const noexcept {
+					inline operator option() const noexcept {
 						return build();
 					}
 			};
@@ -176,8 +176,8 @@ namespace commoncodes {
 }
 
 inline std::ostream& operator<<(std::ostream& stream,
-                                const commoncodes::opt& opt) noexcept {
+                                const commoncodes::option& opt) noexcept {
 	return stream << opt.str();
 }
 
-#endif /* _COMMONCODES_BITS_ARGS_OPT_HPP */
+#endif /* _COMMONCODES_BITS_ARGS_OPTION_HPP */

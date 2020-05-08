@@ -7,8 +7,8 @@
 namespace cc = commoncodes;
 using cc::arg;
 using cc::opt_arg;
-using cc::opt;
 using cc::option_id;
+using cc::option;
 using cc::val_arg;
 using std::nullopt;
 using std::ostringstream;
@@ -26,7 +26,7 @@ int main() {
 	assert(va1 == va2);
 
 
-	opt o1 = opt(option_id(0), {'f'}, {"foo"});
+	option o1 = option(option_id(0), {'f'}, {"foo"});
 	string s2 = "-f";
 	opt_arg oa1 = opt_arg(o1, s2, nullopt);
 	arg a2 = arg(oa1);

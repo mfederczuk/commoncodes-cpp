@@ -20,7 +20,7 @@
 #ifndef _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
 #define _COMMONCODES_BITS_ARGS_OPT_ARG_HPP
 
-#include <commoncodes/bits/args/opt.hpp>
+#include <commoncodes/bits/args/option.hpp>
 #include <optional>
 #include <string>
 #include <variant>
@@ -28,26 +28,26 @@
 namespace commoncodes {
 	struct opt_arg {
 		private:
-			commoncodes::opt _opt;
+			option _opt;
 			std::variant<char, std::string> _alias_arg;
 			std::optional<std::string> _arg;
 
 		public:
-			inline opt_arg(const opt& opt,
+			inline opt_arg(const option& opt,
 			               char alias_arg,
 			               const std::optional<std::string>& arg) noexcept
 					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
 			}
-			inline opt_arg(const opt& opt,
+			inline opt_arg(const option& opt,
 			               const std::string& alias_arg,
 			               const std::optional<std::string>& arg) noexcept
 					: _opt(opt), _alias_arg(alias_arg), _arg(arg) {
 			}
 			inline opt_arg() noexcept
-					: opt_arg(commoncodes::opt(), "", std::nullopt) {
+					: opt_arg(option(), "", std::nullopt) {
 			}
 
-			inline const commoncodes::opt& opt() const noexcept {
+			inline const option& opt() const noexcept {
 				return _opt;
 			}
 
